@@ -59,5 +59,19 @@ class TestMysticum(unittest.TestCase):
         e = myst.cycle_edges(G((1,2,3,4,5,6)))
         self.assertEqual(e, set([(1,2),(5,6),(4,5),(2,3),(1,6),(3,4)]))
 
+    def test_cycles_disjoint(self):
+        # N.B. There are some issues to be resolved about
+        # this test, since we only care about things up to inverses.
+        G = SymmetricGroup(6)
+        disjoints = myst.cycles_disjoint(G((1,2,3,4,5,6)))
+        self.assertEqual(disjoints, set([G((1,5,3,6,2,4)),
+                                         G((1,3,5,2,6,4)),
+                                         G((1,3,6,4,2,5))]))
+    def test_3_disjoint(self):
+        G = SymmetricGroup(6)
+        sixcycles = G.conjugacy_class(G((1,2,3,4,5,6)))
+        for g in sixcycles:
+            self.assertEqual(len(myst.cycles_disjoint(g)),3)
+
 if __name__ == '__main__':
     unittest.main()

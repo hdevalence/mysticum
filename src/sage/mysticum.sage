@@ -61,6 +61,15 @@ def cycle_edges(g):
         x = g(x)
     return e
 
+def cycles_disjoint(g):
+    """
+    Given g, an n-cycle, return the cycles disjoint from g,
+    i.e., those with no common edges.
+    """
+    e = cycle_edges(g)
+    return set((h for h in conj_class_up_to_inverses(g)
+                if cycle_edges(h).isdisjoint(e)))
+
 def pascal_line(*hexagon):
     """
     Given a 6-tuple of points, compute the Pascal line through these points.
