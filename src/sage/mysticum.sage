@@ -33,6 +33,17 @@ def line_intersection(*lines):
     """
     return line_through_points(*lines)
 
+def conj_class_up_to_inverses(g):
+    """
+    Return the conjugacy class of g, with either h or h^-1
+    discarded for every h in the conjugacy class.
+    """
+    conj_class = set()
+    for h in g.parent().conjugacy_class(g):
+        if h^(-1) not in conj_class:
+            conj_class.add(h)
+    return conj_class
+
 def pascal_line(*hexagon):
     """
     Given a 6-tuple of points, compute the Pascal line through these points.
@@ -51,10 +62,7 @@ def pascal_lines(*points):
     """
     G = SymmetricGroup(6)
     # Hexagons <--> 6-cycles, up to inverses
-    hexagons = set()
-    for g in G.conjugacy_class(G((1,2,3,4,5,6))):
-        if g^(-1) not in hexagons:
-            hexagons.add(g)
+    hexagons = conj_class_up_to_inverses(G((1,2,3,4,5,6)))
     lines = dict()
     for g in hexagons:
         lines[g] = pascal_line(*g(points))
