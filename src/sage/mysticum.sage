@@ -45,3 +45,18 @@ def pascal_line(*hexagon):
                            line_through_points(hexagon[5],hexagon[0]))
     return line_through_points(p0,p1,p2)
 
+def pascal_lines(*points):
+    """
+    Given a 6-tuple of points, compute all the Pascal lines through these points.
+    """
+    G = SymmetricGroup(6)
+    # Hexagons <--> 6-cycles, up to inverses
+    hexagons = set()
+    for g in G.conjugacy_class(G((1,2,3,4,5,6))):
+        if g^(-1) not in hexagons:
+            hexagons.add(g)
+    lines = dict()
+    for g in hexagons:
+        lines[g] = pascal_line(*g(points))
+    return lines
+

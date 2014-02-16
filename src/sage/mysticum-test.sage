@@ -49,5 +49,9 @@ class TestMysticum(unittest.TestCase):
         l = myst.pascal_line(*self.hexagon)
         self.assertEqual(l, vector(QQ, [1, 18/179, 847/179]))
 
+    def test_60_pascal_lines(self):
+        lines = myst.pascal_lines(*self.hexagon)
+        self.assertEqual(len(lines), 60)
+
 if __name__ == '__main__':
     unittest.main()
