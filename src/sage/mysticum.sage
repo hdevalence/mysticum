@@ -44,6 +44,23 @@ def conj_class_up_to_inverses(g):
             conj_class.add(h)
     return conj_class
 
+def cycle_edges(g):
+    """
+    Given g, an n-cycle, compute the set of edges of g.
+    If g = (abcdef), the edges are ab. bc, ..., fa.
+    """
+    e = set()
+    x = 1
+    for _ in g.orbit(x):
+        # Edges are unordered, so impose an ordering to
+        # ensure a unique representation.
+        if x < g(x):
+            e.add((x,g(x)))
+        else:
+            e.add((g(x),x))
+        x = g(x)
+    return e
+
 def pascal_line(*hexagon):
     """
     Given a 6-tuple of points, compute the Pascal line through these points.

@@ -54,5 +54,10 @@ class TestMysticum(unittest.TestCase):
         hexes = myst.conj_class_up_to_inverses(G((1,2,3,4,5,6)))
         self.assertEqual(len(hexes), 60)
 
+    def test_cycle_edges(self):
+        G = SymmetricGroup(6)
+        e = myst.cycle_edges(G((1,2,3,4,5,6)))
+        self.assertEqual(e, set([(1,2),(5,6),(4,5),(2,3),(1,6),(3,4)]))
+
 if __name__ == '__main__':
     unittest.main()
