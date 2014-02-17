@@ -85,5 +85,16 @@ class TestMysticum(unittest.TestCase):
         a,b,c,d,e,f = self.hexagon
         self.assertEqual(myst.apply_cycle(g, self.hexagon), (a,c,e,b,f,d))
 
+    def test_kirkman_node(self):
+        G = SymmetricGroup(6)
+        g = G((1,2,3,4,5,6))
+        node = myst.kirkman_node(g,self.hexagon)
+        self.assertEqual(node, vector(QQ,(1, 38/153, -541/153)))
+
+    def test_60_kirkman_nodes(self):
+        nodes = myst.kirkman_nodes(self.hexagon)
+        self.assertEqual(len(nodes), 60)
+
+
 if __name__ == '__main__':
     unittest.main()

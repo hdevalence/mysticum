@@ -106,3 +106,24 @@ def pascal_lines(*points):
         lines[g] = pascal_line(*apply_cycle(g,points))
     return lines
 
+def kirkman_node(g, points):
+    """
+    Compute the Kirkman node for points, with ordering given by g.
+
+    The Kirkman nodes N(g) are indexed by 6-cycles; they are
+    the intersection of the Pascal lines corresponding to the
+    6-cycles disjoint from a given 6-cycle.
+    """
+    lines = [pascal_line(*apply_cycle(h,points)) for h in cycles_disjoint(g)]
+    return line_intersection(*lines)
+
+def kirkman_nodes(points):
+    """
+    Compute all Kirkman nodes for points, indexed by 6-cycles.
+    """
+    G = SymmetricGroup(6)
+    cycles = conj_class_up_to_inverses(G((1,2,3,4,5,6)))
+    nodes = dict()
+    for g in cycles:
+        nodes[g] = kirkman_node(g,points)
+    return nodes
