@@ -49,6 +49,12 @@ class TestMysticum(unittest.TestCase):
         l = myst.pascal_line(*self.hexagon)
         self.assertEqual(l, vector(QQ, [1, 18/179, 847/179]))
 
+    def test_pascal_lines(self):
+        G = SymmetricGroup(6)
+        g = G((1,3,5,2,6,4))
+        lines = myst.pascal_lines(*self.hexagon)
+        self.assertEqual(lines[g], vector(QQ, (1, -221/115, 17/115)))
+
     def test_60_hexagons(self):
         G = SymmetricGroup(6)
         hexes = myst.conj_class_up_to_inverses(G((1,2,3,4,5,6)))
@@ -72,6 +78,12 @@ class TestMysticum(unittest.TestCase):
         sixcycles = G.conjugacy_class(G((1,2,3,4,5,6)))
         for g in sixcycles:
             self.assertEqual(len(myst.cycles_disjoint(g)),3)
+
+    def test_apply_cycle(self):
+        G = SymmetricGroup(6)
+        g = G((1,3,5,2,6,4))
+        a,b,c,d,e,f = self.hexagon
+        self.assertEqual(myst.apply_cycle(g, self.hexagon), (a,c,e,b,f,d))
 
 if __name__ == '__main__':
     unittest.main()

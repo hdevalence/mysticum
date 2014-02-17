@@ -70,6 +70,18 @@ def cycles_disjoint(g):
     return set((h for h in conj_class_up_to_inverses(g)
                 if cycle_edges(h).isdisjoint(e)))
 
+def apply_cycle(g,hex):
+    """
+    Reorders the points in the hexagon hex according to the cycle g,
+    and returns the new hexagon.
+    """
+    new_hex = [None]*6
+    x = 1
+    for i in range(6):
+        new_hex[i] = hex[x-1]
+        x = g(x)
+    return tuple(new_hex)
+
 def pascal_line(*hexagon):
     """
     Given a 6-tuple of points, compute the Pascal line through these points.
@@ -91,6 +103,6 @@ def pascal_lines(*points):
     hexagons = conj_class_up_to_inverses(G((1,2,3,4,5,6)))
     lines = dict()
     for g in hexagons:
-        lines[g] = pascal_line(*g(points))
+        lines[g] = pascal_line(*apply_cycle(g,points))
     return lines
 
