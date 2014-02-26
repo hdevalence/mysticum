@@ -60,6 +60,13 @@ class TestMysticum(unittest.TestCase):
         hexes = myst.conj_class_up_to_inverses(G((1,2,3,4,5,6)))
         self.assertEqual(len(hexes), 60)
 
+    def test_cycles_squaring_to(self):
+        G = SymmetricGroup(6)
+        squarees = myst.cycles_squaring_to(G("(1,3,5)(2,6,4)"))
+        self.assertEqual(squarees, set([G("(1,6,3,4,5,2)"),
+                                        G("(1,4,3,2,5,6)"),
+                                        G("(1,2,3,6,5,4)")]))
+
     def test_cycle_edges(self):
         G = SymmetricGroup(6)
         e = myst.cycle_edges(G((1,2,3,4,5,6)))

@@ -70,6 +70,16 @@ def cycles_disjoint(g):
     return set((h for h in conj_class_up_to_inverses(g)
                 if cycle_edges(h).isdisjoint(e)))
 
+def cycles_squaring_to(s):
+    """
+    Given s, a cycle of shape (3,3), return the 6-cycles
+    (up to inverses) whose squares are s.
+    """
+    G = SymmetricGroup(6)
+    g = G((1,2,3,4,5,6))
+    sixcycles = G.conjugacy_class(g)
+    return set((h for h in sixcycles if h^2 == s))
+
 def apply_cycle(g,hex):
     """
     Reorders the points in the hexagon hex according to the cycle g,
