@@ -137,3 +137,23 @@ def kirkman_nodes(points):
     for g in cycles:
         nodes[g] = kirkman_node(g,points)
     return nodes
+
+def steiner_node(g, points):
+    """
+    Compute the Steiner node corresponding to g, a permutation
+    of shape (3,3).
+    """
+    lines = [pascal_line(*apply_cycle(h,points))
+             for h in cycles_squaring_to(g)]
+    return line_intersection(*lines)
+
+def steiner_nodes(points):
+    """
+    Compute all Steiner nodes for points, indexed by (3,3)-cycles.
+    """
+    G = SymmetricGroup(6)
+    cycles = conj_class_up_to_inverses(G("(1,2,3)(4,5,6)"))
+    nodes = dict()
+    for g in cycles:
+        nodes[g] = steiner_node(g,points)
+    return nodes

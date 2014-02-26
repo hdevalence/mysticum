@@ -13,4 +13,5 @@ todo
 ----
 
 * more efficient algorithms for working with permutations
+* add tests for steiner nodes
 
