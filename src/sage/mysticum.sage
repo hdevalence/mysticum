@@ -157,3 +157,22 @@ def steiner_nodes(points):
     for g in cycles:
         nodes[g] = steiner_node(g,points)
     return nodes
+
+def cayley_line(g, points):
+    """
+    Compute the Cayley line corresponding to the (3,3)-cycle g.
+    """
+    nodes = [kirkman_node(h, points) for h in cycles_squaring_to(g)]
+    return line_through_points(*nodes)
+
+def cayley_lines(points):
+    """
+    Compute the Cayley lines for points, indexed by (3,3)-cycles.
+    """
+    G = SymmetricGroup(6)
+    cycles = conj_class_up_to_inverses(G("(1,2,3)(4,5,6)"))
+    lines = dict()
+    for g in cycles:
+        lines[g] = cayley_line(g,points)
+    return lines
+
