@@ -95,6 +95,5 @@ class TestMysticum(unittest.TestCase):
         nodes = myst.kirkman_nodes(self.hexagon)
         self.assertEqual(len(nodes), 60)
 
-
 if __name__ == '__main__':
     unittest.main()
