@@ -7,6 +7,8 @@ Code to compute the complete Mysticum Hexagrammaticum.
 Author: Henry de Valence
 """
 
+from instance_memoize import memoize
+
 class OverDeterminedError(Exception):
     """Error raised by over-determined constraints."""
     pass
@@ -92,87 +94,56 @@ def apply_cycle(g,hex):
         x = g(x)
     return tuple(new_hex)
 
-def pascal_line(*hexagon):
+class Mysticum:
     """
-    Given a 6-tuple of points, compute the Pascal line through these points.
-    """
-    p0 = line_intersection(line_through_points(hexagon[0],hexagon[1]),
-                           line_through_points(hexagon[3],hexagon[4]))
-    p1 = line_intersection(line_through_points(hexagon[1],hexagon[2]),
-                           line_through_points(hexagon[4],hexagon[5]))
-    p2 = line_intersection(line_through_points(hexagon[2],hexagon[3]),
-                           line_through_points(hexagon[5],hexagon[0]))
-    return line_through_points(p0,p1,p2)
-
-def pascal_lines(*points):
-    """
-    Given a 6-tuple of points, compute all the Pascal lines through these points.
+    Object representing the 95 lines and 95 points associated to
+    a given hexagon.
     """
     G = SymmetricGroup(6)
-    # Hexagons <--> 6-cycles, up to inverses
-    hexagons = conj_class_up_to_inverses(G((1,2,3,4,5,6)))
-    lines = dict()
-    for g in hexagons:
-        lines[g] = pascal_line(*apply_cycle(g,points))
-    return lines
 
-def kirkman_node(g, points):
-    """
-    Compute the Kirkman node for points, with ordering given by g.
+    def __init__(self, a, b, c, d, e, f):
+        """
+        Constructs the Mysticum through the given points,
+        which are assumed to lie on a conic in PP^2. The points
+        are given as 3-vectors in homogeneous coordinates.
+        """
+        self.hexagon = (a,b,c,d,e,f)
 
-    The Kirkman nodes N(g) are indexed by 6-cycles; they are
-    the intersection of the Pascal lines corresponding to the
-    6-cycles disjoint from a given 6-cycle.
-    """
-    lines = [pascal_line(*apply_cycle(h,points)) for h in cycles_disjoint(g)]
-    return line_intersection(*lines)
+    @memoize
+    def pascal_line(self, g):
+        """
+        Get the pascal line L(g), for g a 6-cycle.
+        """
+        hex = apply_cycle(g, self.hexagon)
+        p0 = line_intersection(line_through_points(hex[0],hex[1]),
+                               line_through_points(hex[3],hex[4]))
+        p1 = line_intersection(line_through_points(hex[1],hex[2]),
+                               line_through_points(hex[4],hex[5]))
+        p2 = line_intersection(line_through_points(hex[2],hex[3]),
+                               line_through_points(hex[5],hex[0]))
+        return line_through_points(p0,p1,p2)
 
-def kirkman_nodes(points):
-    """
-    Compute all Kirkman nodes for points, indexed by 6-cycles.
-    """
-    G = SymmetricGroup(6)
-    cycles = conj_class_up_to_inverses(G((1,2,3,4,5,6)))
-    nodes = dict()
-    for g in cycles:
-        nodes[g] = kirkman_node(g,points)
-    return nodes
+    @memoize
+    def kirkman_node(self, g):
+        """
+        Compute the Kirkman node N(g), for g a 6-cycle.
+        """
+        lines = [self.pascal_line(h) for h in cycles_disjoint(g)]
+        return line_intersection(*lines)
 
-def steiner_node(g, points):
-    """
-    Compute the Steiner node corresponding to g, a permutation
-    of shape (3,3).
-    """
-    lines = [pascal_line(*apply_cycle(h,points))
-             for h in cycles_squaring_to(g)]
-    return line_intersection(*lines)
+    @memoize
+    def steiner_node(self, g):
+        """
+        Compute the Steiner node N(g) for g of shape (3,3).
+        """
+        lines = [self.pascal_line(h) for h in cycles_squaring_to(g)]
+        return line_intersection(*lines)
 
-def steiner_nodes(points):
-    """
-    Compute all Steiner nodes for points, indexed by (3,3)-cycles.
-    """
-    G = SymmetricGroup(6)
-    cycles = conj_class_up_to_inverses(G("(1,2,3)(4,5,6)"))
-    nodes = dict()
-    for g in cycles:
-        nodes[g] = steiner_node(g,points)
-    return nodes
-
-def cayley_line(g, points):
-    """
-    Compute the Cayley line corresponding to the (3,3)-cycle g.
-    """
-    nodes = [kirkman_node(h, points) for h in cycles_squaring_to(g)]
-    return line_through_points(*nodes)
-
-def cayley_lines(points):
-    """
-    Compute the Cayley lines for points, indexed by (3,3)-cycles.
-    """
-    G = SymmetricGroup(6)
-    cycles = conj_class_up_to_inverses(G("(1,2,3)(4,5,6)"))
-    lines = dict()
-    for g in cycles:
-        lines[g] = cayley_line(g,points)
-    return lines
+    @memoize
+    def cayley_line(self, g):
+        """
+        Compute the Cayley line L(g) for g of shape (3,3).
+        """
+        nodes = [self.kirkman_node(h) for h in cycles_squaring_to(g)]
+        return line_through_points(*nodes)
 
