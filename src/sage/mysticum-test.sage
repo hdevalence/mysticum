@@ -91,5 +91,9 @@ class TestMysticum(unittest.TestCase):
         node = self.M.kirkman_node(self.M.G((1,2,3,4,5,6)))
         self.assertEqual(node, vector(QQ,(1, 38/153, -541/153)))
 
+    def test_steiner_node(self):
+        node = self.M.steiner_node(self.M.G('(1,3,5)(2,6,4)'))
+        self.assertEqual(node, vector(QQ,(1, 3258/82079, -414955/82079)))
+
 if __name__ == '__main__':
     unittest.main()
