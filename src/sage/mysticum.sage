@@ -94,6 +94,12 @@ def apply_cycle(g,hex):
         x = g(x)
     return tuple(new_hex)
 
+def cycles_commuting_with(C, g):
+    """
+    Return cycles (up to inverses) in C which commute with g.
+    """
+    return (h for h in C if (g*h == h*g) and h < h.inverse())
+
 class Mysticum:
     """
     Object representing the 95 lines and 95 points associated to
