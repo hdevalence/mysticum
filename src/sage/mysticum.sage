@@ -36,6 +36,10 @@ def line_intersection(*lines):
     """
     return line_through_points(*lines)
 
+def assert_shape(g, shape):
+    assert Permutation(g).cycle_type() == shape, \
+        "Permutation %s does not have shape %s" % (repr(g), repr(shape))
+
 def conj_class_up_to_inverses(g):
     """
     Return the conjugacy class of g, with either h or h^-1
@@ -121,6 +125,7 @@ class Mysticum:
         """
         Get the pascal line L(g), for g a 6-cycle.
         """
+        assert_shape(g, [6])
         hex = apply_cycle(g, self.hexagon)
         p0 = line_intersection(line_through_points(hex[0],hex[1]),
                                line_through_points(hex[3],hex[4]))
@@ -135,6 +140,7 @@ class Mysticum:
         """
         Compute the Kirkman node N(g), for g a 6-cycle.
         """
+        assert_shape(g, [6])
         lines = [self.pascal_line(h) for h in cycles_disjoint(g)]
         return line_intersection(*lines)
 
@@ -143,6 +149,7 @@ class Mysticum:
         """
         Compute the Steiner node N(g) for g of shape (3,3).
         """
+        assert_shape(g, [3,3])
         lines = [self.pascal_line(h) for h in cycles_squaring_to(g)]
         return line_intersection(*lines)
 
@@ -151,6 +158,7 @@ class Mysticum:
         """
         Compute the Cayley line L(g) for g of shape (3,3).
         """
+        assert_shape(g, [3,3])
         nodes = [self.kirkman_node(h) for h in cycles_squaring_to(g)]
         return line_through_points(*nodes)
 
@@ -159,6 +167,7 @@ class Mysticum:
         """
         Compute the Plücker line L(g) for g of shape (2,2,2).
         """
+        assert_shape(g, [2,2,2])
         C = self.G("(1,2,3)(4,5,6)").conjugacy_class()
         nodes = [self.steiner_node(h) for h in cycles_commuting_with(C, g)]
         return line_through_points(*nodes)
@@ -168,6 +177,7 @@ class Mysticum:
         """
         Compute the Salmon node N(g) for g of shape (2,2,2).
         """
+        assert_shape(g, [2,2,2])
         C = self.G("(1,2,3)(4,5,6)").conjugacy_class()
         lines = [self.cayley_line(h) for h in cycles_commuting_with(C, g)]
         return line_intersection(*lines)
