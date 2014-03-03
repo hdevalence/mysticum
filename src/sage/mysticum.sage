@@ -163,3 +163,12 @@ class Mysticum:
         nodes = [self.steiner_node(h) for h in cycles_commuting_with(C, g)]
         return line_through_points(*nodes)
 
+    @memoize
+    def salmon_node(self, g):
+        """
+        Compute the Salmon node N(g) for g of shape (2,2,2).
+        """
+        C = self.G("(1,2,3)(4,5,6)").conjugacy_class()
+        lines = [self.cayley_line(h) for h in cycles_commuting_with(C, g)]
+        return line_intersection(*lines)
+
