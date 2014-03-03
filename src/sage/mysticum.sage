@@ -1,4 +1,5 @@
 #!/usr/bin/env sage
+# coding: utf-8
 """
 Code to compute the complete Mysticum Hexagrammaticum.
 
@@ -151,5 +152,14 @@ class Mysticum:
         Compute the Cayley line L(g) for g of shape (3,3).
         """
         nodes = [self.kirkman_node(h) for h in cycles_squaring_to(g)]
+        return line_through_points(*nodes)
+
+    @memoize
+    def pluecker_line(self, g):
+        """
+        Compute the Plücker line L(g) for g of shape (2,2,2).
+        """
+        C = self.G("(1,2,3)(4,5,6)").conjugacy_class()
+        nodes = [self.steiner_node(h) for h in cycles_commuting_with(C, g)]
         return line_through_points(*nodes)
 
